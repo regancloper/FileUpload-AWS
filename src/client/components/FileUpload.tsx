@@ -11,10 +11,6 @@ interface FileUploadProps { }
 const FileUpload: React.FC<FileUploadProps> = ({ }) => {
     const [file, setFile] = useState<File>(null);
     const [fileName, setFileName] = useState('Choose File');
-    const [uploadedFile, setUploadedFile] = useState<UploadedFile>({
-        fileName: null,
-        filePath: null
-    });
     const [message, setMessage] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertColor, setAlertColor] = useState('');
@@ -34,33 +30,24 @@ const FileUpload: React.FC<FileUploadProps> = ({ }) => {
             setAlertColor('alert alert-danger');
             setShowAlert(true);
         } else {
+            setMessage('Uploading...');
+            setAlertColor('alert alert-info');
+            setShowAlert(true);
             const formData = new FormData();
             formData.append('file', file);
             formData.append('title', 'Test file');
 
             try {
-
-                // await fetch('/api/upload', {
-                //     method: 'POST',
-                //     body: formData
-                // });
-
                 const res = await axios.post('/api/upload', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
                     onUploadProgress: (progressEvent: any) => {
-                        setUploadPercentage(Math.round((progressEvent.loaded * 100) / progressEvent.total));
-                        // Clear percentage
-                        setTimeout(() => setUploadPercentage(0), 3000);
+                        let status = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        setUploadPercentage(status);
+                        if (status >= 100) {
+                            setMessage('File Uploaded!');
+                            setAlertColor('alert alert-success');
+                        }
                     }
                 });
-
-                const { fileName, filePath } = res.data;
-                setUploadedFile({ fileName, filePath });
-                setMessage('File Uploaded!');
-                setAlertColor('alert alert-success');
-                setShowAlert(true);
             } catch (err) {
                 setUploadPercentage(0);
                 if (err.response.status === 500) {
@@ -70,12 +57,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ }) => {
                 }
                 setAlertColor('alert alert-danger');
                 setShowAlert(true);
+            } finally {
+                setShowAlert(false);
+                setMessage('');
+                setUploadPercentage(0);
             }
         }
-        setTimeout(() => {
-            setShowAlert(false);
-            setMessage('');
-        }, 3000);
     }
 
     const handleDownload = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -142,10 +129,5 @@ const FileUpload: React.FC<FileUploadProps> = ({ }) => {
     );
 }
 
-
-interface UploadedFile {
-    fileName: string;
-    filePath: string;
-}
 
 export default FileUpload;
