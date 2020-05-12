@@ -1,0 +1,36 @@
+$theme-colors: (
+    'primary': #0091ea //Covalence Blue!  :D
+);
+
+.transition-enter {
+    opacity: 0.01;
+    transform: translate(0, -10px);
+}
+
+.transition-enter-active {
+    opacity: 1;
+    transform: translate(0, 0);
+    transition: all 300ms ease-in;
+}
+
+.transition-exit {
+    opacity: 1;
+}
+.transition-exit-active {
+    opacity: 0;
+    transform: translate(0, 0);
+    transition: all 200ms ease-out;
+}
+
+#upload-button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#current-upload {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+@import '../../../node_modules/bootstrap/scss/bootstrap.scss';
