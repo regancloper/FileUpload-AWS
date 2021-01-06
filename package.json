@@ -29,7 +29,7 @@
     "@types/react-dom": "^16.9.6",
     "@types/react-transition-group": "^4.2.4",
     "aws-sdk": "^2.673.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
     "busboy": "^0.3.1",
     "busboy-body-parser": "^0.3.2",
